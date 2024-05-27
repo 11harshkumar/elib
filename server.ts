@@ -1,5 +1,11 @@
-console.log("Welcome to Ebook Apis...");
+import app from "./src/app";
 
-function test() {
-    console.log("Testing prettier...");
-}
+const startServer = () => {
+    const PORT = process.env.port || 3000;
+
+    app.listen(PORT, () => {
+        console.log(`Listening on PORT : ${PORT}`);
+    });
+};
+
+startServer();
