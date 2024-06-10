@@ -67,6 +67,41 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    // Get the login email and password
 
+    const { email, password } = req.body;
 
-export { createUser };
+    if (!email || !password) {
+        const error = createHttpError(
+            400,
+            "Please enter all the required details..."
+        );
+        return next(error);
+    }
+
+    const user = await userModel.findOne({ email: email });
+
+    if (!user) {
+        const error = createHttpError(404, "User not found");
+        return next(error);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        return next(createHttpError(400, "Invalid password"));
+    }
+
+    // If Password matches then create a new access token
+    const token = sign({ sub: user._id }, config.jwtSecret as string, {
+        expiresIn: "7d",
+        algorithm: "HS256",
+    });
+
+    res.json({
+        accessToken: token,
+    });
+};
+
+export { createUser, loginUser };
