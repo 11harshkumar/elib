@@ -4,7 +4,6 @@ import userModel from "./userModel";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { config } from "../config/config";
-import { create } from "domain";
 import { User } from "./userTypes";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -60,12 +59,14 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             expiresIn: "7d",
             algorithm: "HS256",
         });
-        res.json({
+        res.status(201).json({
             accessToken: token,
         });
     } catch (error) {
         return next(createHttpError(500, "Error While signing the jwt token"));
     }
 };
+
+
 
 export { createUser };
