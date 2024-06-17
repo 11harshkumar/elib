@@ -1,5 +1,11 @@
 import express from "express";
-import { createBook, listBooks,getBookById, updateBook } from "./bookController";
+import {
+    createBook,
+    listBooks,
+    getBookById,
+    updateBook,
+    deleteBook,
+} from "./bookController";
 import multer from "multer";
 import path from "path";
 import authenticate from "../middlewares/authenticate";
@@ -33,6 +39,8 @@ bookRouter.patch(
 
 bookRouter.get("/", listBooks); // Don't need to authenticate in this case as non-authenticate users can also see the books in the library
 
-bookRouter.get("/:bookId",getBookById)
+bookRouter.get("/:bookId", getBookById);
+
+bookRouter.delete("/:bookId", authenticate, deleteBook);
 
 export default bookRouter;
